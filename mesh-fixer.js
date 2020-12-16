@@ -7,7 +7,11 @@ var createGrid = require('./lib/mesh-grid')
 var projectVerts = require('./lib/project-verts')
 
 function calcTolerance (cells, positions) {
+  console.log(`calculating tolerance for ${cells.length} cells and ${positions.length} positions`);
   var avgEdge = 0
+
+  let prevProgress = 0;
+  let currentProgress = 0;
 
   for (var i = 0; i < cells.length; ++i) {
     var c = cells[i]
@@ -21,6 +25,12 @@ function calcTolerance (cells, positions) {
 
       avgEdge += d
     }
+
+    currentProgress = ((i / cells.length) * 100).toFixed(2);
+    if (currentProgress - prevProgress > 1) {
+      console.log(`Progress: ${currentProgress}%`);
+    }
+    prevProgress = currentProgress;
   }
 
   return 2 * avgEdge / (3 * cells.length)
